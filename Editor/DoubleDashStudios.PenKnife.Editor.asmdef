@@ -1,0 +1,18 @@
+{
+    "name": "DoubleDashStudios.PenKnife.Editor",
+    "rootNamespace": "",
+    "references": [
+        "GUID:5c5c1135216f5d24b8278ef110ee0cf6"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
