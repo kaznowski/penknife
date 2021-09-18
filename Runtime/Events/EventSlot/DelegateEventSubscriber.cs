@@ -9,6 +9,8 @@ public abstract class DelegateEventSubscriberBase : IEventSlotHandle
     public bool IsDisposed => _disposed;
     public bool IsTriggerOnce => _targetCount == 1;
 
+    public int TriggeredCount => _triggeredCount;
+
     protected abstract void
         DisposeOfAction(); //The appropriate action to dispose should be also determined in child classes
 
@@ -20,7 +22,7 @@ public abstract class DelegateEventSubscriberBase : IEventSlotHandle
 
     protected void AfterTrigger()
     {
-        _targetCount++;
+        _triggeredCount++;
         //If the current eventCount it bigger then our targetCount, the event can be disposed
         if (_triggeredCount >= _targetCount)
             Dispose();
