@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace DoubleDash.CodingTools.ReactiveVariables
@@ -20,6 +21,16 @@ namespace DoubleDash.CodingTools.ReactiveVariables
         public IEventSlotHandle Subscribe(DelegateEventSubscriber<TypeVariable> subscriber)
         {
             return _value.Subscribe(subscriber);
+        }
+
+        protected virtual void OnDisable()
+        {
+            Dispose();
+        }
+
+        public void Dispose()
+        {
+            _value?.Dispose();
         }
     }
 }

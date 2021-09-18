@@ -1,9 +1,10 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace DoubleDash.CodingTools.ReactiveVariables
 {
-    public interface IReactiveVariable<TypeVariable>
+    public interface IReactiveVariable<TypeVariable> : IDisposable
     {
         public IGameEvent<DelegateEventSubscriber<TypeVariable>, TypeVariable> OnBeforeValueChangedEvent 
         {
@@ -100,6 +101,12 @@ namespace DoubleDash.CodingTools.ReactiveVariables
         public IEventSlotHandle Subscribe(DelegateEventSubscriber<TypeVariable> subscriber)
         {
             return _onValueChanged.Subscribe(subscriber);
+        }
+
+        public void Dispose()
+        {
+            _onBeforeValueChanged?.Dispose();
+            _onValueChanged?.Dispose();
         }
     }
 }
