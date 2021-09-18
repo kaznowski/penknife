@@ -6,6 +6,6 @@
   "description": "DoubleDash codebase.",
   "repository": {
     "url": "https://github.com/kaznowski/penknife.git",
-    "type": "git",    
+    "type": "git"    
   }
 }
