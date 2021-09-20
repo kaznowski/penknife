@@ -51,7 +51,8 @@ namespace DoubleDash.CodingTools.ReactiveVariables
 
         protected void OnEnable()
         {
-            _runtimeValue.SetValueAndForceNotify(_initialValue.Value);
+            //Verify if its null because when you create a new Scriptable the first OnEnable trigger an exception
+            _runtimeValue?.SetValueAndForceNotify(_initialValue.Value);
         }
 
         protected void OnDisable()
