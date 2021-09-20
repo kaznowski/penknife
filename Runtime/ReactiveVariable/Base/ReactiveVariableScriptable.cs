@@ -9,7 +9,7 @@ namespace DoubleDash.CodingTools.ReactiveVariables
         ISerializationCallbackReceiver
     {
         [SerializeField]
-        VariableReference<TypeVariable> _initialValue;
+        VariableReference<TypeVariable> _initialValue = new VariableReference<TypeVariable>();
 
         [SerializeField] ReactiveVariable<TypeVariable> _runtimeValue = new ReactiveVariable<TypeVariable>(default(TypeVariable));
 
@@ -51,7 +51,6 @@ namespace DoubleDash.CodingTools.ReactiveVariables
 
         protected void OnEnable()
         {
-            //Verify if its null because when you create a new Scriptable the first OnEnable trigger an exception
             _runtimeValue?.SetValueAndForceNotify(_initialValue.Value);
         }
 
