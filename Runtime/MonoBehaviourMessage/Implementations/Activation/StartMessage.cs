@@ -1,6 +1,6 @@
 namespace DoubleDash.MonoBehaviourMessages
 {
-    public abstract class StartMessage : MonoBehaviourMessage
+    public class StartMessage : MonoBehaviourMessage
     {
         private void Start()
         {

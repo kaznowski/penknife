@@ -1,6 +1,6 @@
 namespace DoubleDash.MonoBehaviourMessages
 {
-    public abstract class OnEnableMessage : MonoBehaviourMessage
+    public class OnEnableMessage : MonoBehaviourMessage
     {
         private void OnEnable()
         {
