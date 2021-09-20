@@ -1,11 +1,11 @@
 {
   "displayName": "PenKnife",
   "name": "com.doubledashstudios.pen-knife",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "unity": "2020.3",
   "description": "DoubleDash codebase.",
   "repository": {
     "url": "https://github.com/kaznowski/penknife.git",
-    "type": "git"    
+    "type": "git"
   }
 }

@@ -99,7 +99,7 @@ namespace DoubleDash.ComponentManagement.UIManagement
             public Selectable SelectAtRandom()
             {
                 //Generate ordered List
-                List<int> randomIndexes = DoubleDash.CodingTools.ClassExtensions.ExtensionsList.GenerateRandomIndexList(SelectableElements.Count);
+                List<int> randomIndexes = ListExtension.GenerateRandomIndexList(SelectableElements.Count);
 
                 //Check each index
                 for (int i = 0; i < randomIndexes.Count; i++)
