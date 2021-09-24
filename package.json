@@ -1,7 +1,7 @@
 {
   "displayName": "PenKnife",
   "name": "com.doubledashstudios.pen-knife",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "unity": "2020.3",
   "description": "DoubleDash codebase.",
   "repository": {

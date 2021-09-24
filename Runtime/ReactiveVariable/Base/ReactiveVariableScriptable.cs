@@ -49,12 +49,12 @@ namespace DoubleDash.CodingTools.ReactiveVariables
             
         }
 
-        protected void OnEnable()
+        protected virtual void OnEnable()
         {
             _runtimeValue?.SetValueAndForceNotify(_initialValue.Value);
         }
 
-        protected void OnDisable()
+        protected virtual void OnDisable()
         {
             Dispose();
         }
