@@ -20,7 +20,7 @@ namespace DoubleDash.CodingTools.ReactiveVariables
     [System.Serializable]
     public class ReactiveVariable<TypeVariable> : IVariable<TypeVariable>, IReactiveVariable<TypeVariable>, IEventSubscriber<DelegateEventSubscriber<TypeVariable>>
     {
-        [SerializeProperty("Value")]
+        //This cause strange issues on Unity Editor Render [SerializeProperty("Value")]
         [SerializeField] TypeVariable _variable;
 
         [Header("Events")]
@@ -87,13 +87,13 @@ namespace DoubleDash.CodingTools.ReactiveVariables
         void SetInternal(TypeVariable newValue) 
         {
             //Call the event for the before value changes.
-            OnBeforeValueChangedEvent.Trigger(_variable);
+            OnBeforeValueChangedEvent?.Trigger(_variable);
 
             //Update the value
             _variable = newValue;
 
             //Call the event for the value change.
-            OnValueChangedEvent.Trigger(_variable);
+            OnValueChangedEvent?.Trigger(_variable);
         }
 
         #endregion
