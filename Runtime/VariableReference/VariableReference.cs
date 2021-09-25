@@ -8,7 +8,6 @@ namespace DoubleDash.CodingTools
     /// This class is currently not thread safe.
     /// </summary>
     /// <typeparam name="TypeVariable"></typeparam>
-
     [System.Serializable]
     public class VariableReference<TypeVariable> : IVariable<TypeVariable>
     {
@@ -18,14 +17,13 @@ namespace DoubleDash.CodingTools
         /// This class is used for when the UnityObject does not implement 'IVariable<TypeVariable>', and instead it implements 'TypeVariable'.
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        [System.Serializable] public class InterfacelessVariable<T> : IVariable<T>
+        [System.Serializable]
+        public class InterfacelessVariable<T> : IVariable<T>
         {
-            public T Value {
-                get;
-                set;
-            }
+            public T Value { get; set; }
 
-            public InterfacelessVariable(T value){
+            public InterfacelessVariable(T value)
+            {
                 Value = value;
             }
         }
@@ -68,11 +66,13 @@ namespace DoubleDash.CodingTools
 
         #region Public Variables
 
-        [Tooltip("If this value is true, the value will be taken from an Interface on a UnityEngine.Object, such as a ScriptableObject or MonoBehaviour.\n\n " +
-                 "This value is also used as the default return for when an error occours.")]
+        [Tooltip(
+            "If this value is true, the value will be taken from an Interface on a UnityEngine.Object, such as a ScriptableObject or MonoBehaviour.\n\n " +
+            "This value is also used as the default return for when an error occours.")]
         public bool useReference;
 
-        [Tooltip("Internal value for when not using a reference. Only simple serializable objects that are not classes or interfaces, such as integers, strings, Vectors or Curves can be internal to this instance.")]
+        [Tooltip(
+            "Internal value for when not using a reference. Only simple serializable objects that are not classes or interfaces, such as integers, strings, Vectors or Curves can be internal to this instance.")]
         public TypeVariable internalValue;
 
         #endregion
@@ -82,11 +82,16 @@ namespace DoubleDash.CodingTools
         //Reference value that is used when "useReference" is enabled. 
         IVariable<TypeVariable> _referenceValue;
 
-        [Tooltip("Object reference containing the reference value. Whenever this object isn't null, it's used to serialize the reference and obtain the value, or interface to the value.")]
-        [SerializeField] UnityEngine.Object objectReference;
-        
-        static readonly int maximumDepth = 7; //How deep should Cyclical dependency be checked? Failure to identify cyclical dependencies will cause a stack overflow.
-        static int currentDepth = 0;          //Current depth search of reference values.
+        [Tooltip(
+            "Object reference containing the reference value. Whenever this object isn't null, it's used to serialize the reference and obtain the value, or interface to the value.")]
+        [SerializeField]
+        UnityEngine.Object objectReference;
+
+        static readonly int
+            maximumDepth =
+                7; //How deep should Cyclical dependency be checked? Failure to identify cyclical dependencies will cause a stack overflow.
+
+        static int currentDepth = 0; //Current depth search of reference values.
 
         #endregion
 
@@ -95,9 +100,9 @@ namespace DoubleDash.CodingTools
         /// <summary>
         /// Returns true if this Reference is able to get a reference value from the serialized UnityObject. If there's no UnityObject, this also returns false.
         /// </summary>
-        public bool HasReferenceValue 
+        public bool HasReferenceValue
         {
-            get 
+            get
             {
                 //Try to generate the reference value
                 try
@@ -120,9 +125,9 @@ namespace DoubleDash.CodingTools
         /// <summary>
         /// Obtains the reference value of this variable.
         /// </summary>
-        public TypeVariable ReferenceValue 
+        public TypeVariable ReferenceValue
         {
-            get 
+            get
             {
                 //Get the reference value from the object or cached interface
                 TypeVariable returnValue = GetReferenceValue(out bool success);
@@ -131,11 +136,18 @@ namespace DoubleDash.CodingTools
                 if (success) return returnValue;
 
                 //If the reference wasn't found, throw an error and return the internal value
-                Debug.LogError("Trying to get a Reference Value from a '" + this.GetType() + "' of '" + typeof(TypeVariable).GetType().Name + "'. But that Object is null.");
+                // Commented because it spam the UnityEditor Log and disturb and confuse the debugging Debug.LogError("Trying to get a Reference Value from a '" + this.GetType() + "' of '" +
+                //                typeof(TypeVariable).GetType().Name + "'. But that Object is null.");
                 return internalValue;
             }
-            set 
+            set
             {
+                if (_referenceValue == null)
+                {
+                    _referenceValue = new InterfacelessVariable<TypeVariable>(value);
+                    return;
+                }
+
                 //Set value to reference.
                 _referenceValue.Value = value;
             }
@@ -195,7 +207,7 @@ namespace DoubleDash.CodingTools
 
         #region Private Functions
 
-        TypeVariable GetReferenceValue(out bool success) 
+        TypeVariable GetReferenceValue(out bool success)
         {
             //If the reference isn't null, get it and stop
             if (_referenceValue != null)
@@ -203,7 +215,8 @@ namespace DoubleDash.CodingTools
                 //If the maximum depth for searching references within references was exceeded, stop.
                 if (currentDepth > maximumDepth)
                 {
-                    string exceptionError = "Maximum depth for finding reference sequences of 'IVariable<" + typeof(TypeVariable).Name + ">' exceeded. " +
+                    string exceptionError = "Maximum depth for finding reference sequences of 'IVariable<" +
+                                            typeof(TypeVariable).Name + ">' exceeded. " +
                                             "Consider re-structuring your references, or increasing the 'VariableReference's' static 'maximumDepth' value.";
 
                     throw new MaximumDepthExceededException(exceptionError);
@@ -254,10 +267,12 @@ namespace DoubleDash.CodingTools
                 Type objectType = objectReference.GetType();
 
                 //If the Object implements the reference to the variable, set that reference and stop.
-                if (objectType.ImplementsOrInherits(typeof(IVariable<TypeVariable>))) return (objectReference as IVariable<TypeVariable>);
+                if (objectType.ImplementsOrInherits(typeof(IVariable<TypeVariable>)))
+                    return (objectReference as IVariable<TypeVariable>);
 
                 //If the Object implements the variable, create a new class to contain the interface and store the value
-                if (objectType.ImplementsOrInherits(typeof(TypeVariable))) return new InterfacelessVariable<TypeVariable>((TypeVariable) (object) objectReference);
+                if (objectType.ImplementsOrInherits(typeof(TypeVariable)))
+                    return new InterfacelessVariable<TypeVariable>((TypeVariable) (object) objectReference);
 
                 //If the Object doesn't implement the IVariable or the Variable, and it is a GameObject...
                 if (objectReference is GameObject)
@@ -266,40 +281,51 @@ namespace DoubleDash.CodingTools
                     GameObject objectAsGameObject = objectReference as GameObject;
 
                     //Attempt to get 'IVariable<TypeVariable>' from a component on that object.
-                    IVariable<TypeVariable> gameObjectComponentInterfaceToT = objectAsGameObject.GetComponent<IVariable<TypeVariable>>();
+                    IVariable<TypeVariable> gameObjectComponentInterfaceToT =
+                        objectAsGameObject.GetComponent<IVariable<TypeVariable>>();
 
                     //If has found that component, return it
                     if (gameObjectComponentInterfaceToT != null) return gameObjectComponentInterfaceToT;
 
                     //If type derives from component
-                    if (typeof(TypeVariable).ImplementsOrInherits(typeof(Component)) || typeof(TypeVariable).IsInterface)
+                    if (typeof(TypeVariable).ImplementsOrInherits(typeof(Component)) ||
+                        typeof(TypeVariable).IsInterface)
                     {
                         //Attempt to get 'TypeVariable' from a component on that object.
-                        TypeVariable gameObjectComponentT = (TypeVariable)(object)objectAsGameObject.GetComponent<TypeVariable>();
+                        TypeVariable gameObjectComponentT =
+                            (TypeVariable) (object) objectAsGameObject.GetComponent<TypeVariable>();
 
                         //If has found that component, return it
-                        if (gameObjectComponentT != null) return new InterfacelessVariable<TypeVariable>(gameObjectComponentT);
+                        if (gameObjectComponentT != null)
+                            return new InterfacelessVariable<TypeVariable>(gameObjectComponentT);
                     }
 
                     //Parse the variable name if possible into declarable types
-                    string varName = DoubleDash.CodingTools.DebugTools.TypeParser.ParseCompilerName(typeof(TypeVariable).Name);
+                    string varName =
+                        DoubleDash.CodingTools.DebugTools.TypeParser.ParseCompilerName(typeof(TypeVariable).Name);
 
                     //If it got this far, throw error for the object reference being a GameObject without the appropriate component.
-                    Debug.LogError("The '" + objectType + "' of name '" + objectReference.name + "' does not contain a 'Component' that implements either 'IVariable<" + varName + ">' or '" + varName + "'");
+                    Debug.LogError("The '" + objectType + "' of name '" + objectReference.name +
+                                   "' does not contain a 'Component' that implements either 'IVariable<" + varName +
+                                   ">' or '" + varName + "'");
 
                     return null;
                 }
-                else 
+                else
                 {
                     //Parse the variable name if possible into declarable types
-                    string varName = DoubleDash.CodingTools.DebugTools.TypeParser.ParseCompilerName(typeof(TypeVariable).Name);
+                    string varName =
+                        DoubleDash.CodingTools.DebugTools.TypeParser.ParseCompilerName(typeof(TypeVariable).Name);
 
                     //If it got this far, throw error for the object reference not implementing or inheriting from the type, or a reference to the type
-                    Debug.LogError("The 'UnityObject.Object' of name '" + objectReference.name + "' of type '" + objectType + "' is not of class '" + varName + "' or implements 'IVariable<" + varName + ">'.");
+                    Debug.LogError("The 'UnityObject.Object' of name '" + objectReference.name + "' of type '" +
+                                   objectType + "' is not of class '" + varName + "' or implements 'IVariable<" +
+                                   varName + ">'.");
 
                     return null;
                 }
             }
+
             //There's no object to attempt to get the IVariable<TypeVariable> from
             return null;
         }
@@ -311,8 +337,9 @@ namespace DoubleDash.CodingTools
         /// <summary>
         /// This Property is used for PropertyDrawer and accessed via reflection to validate injected UnityObject entries. If it is, it's saved in the _referenceValue.
         /// </summary>
-        protected bool IsUnityObjectValid {
-            get 
+        protected bool IsUnityObjectValid
+        {
+            get
             {
                 //Cached variable obtained from object.
                 IVariable<TypeVariable> variableFromObject;
@@ -330,9 +357,8 @@ namespace DoubleDash.CodingTools
 
                     //Attempt to get that value
                     TypeVariable exceptionTest = variableFromObject.Value;
-                
                 }
-                catch (MaximumDepthExceededException e) 
+                catch (MaximumDepthExceededException e)
                 {
                     //Print the exception and return false
                     Debug.LogError(e);
@@ -350,8 +376,8 @@ namespace DoubleDash.CodingTools
                 //
                 //if(!Application.isPlaying)
                 //{
-                    //Check if the attempt is being made on the unity editor. If it is, warn that it will cause serialization problems.
-                    //Debug.LogWarning("Setting up the Value for a '" + this.GetType().Name + "' of '" + typeof(TypeVariable).GetType().Name + "' directly. This change will not be saved on Play/Stop since it can't be serialized. Instead try to inject the reference via the inspector using the 'Object Reference' field.");
+                //Check if the attempt is being made on the unity editor. If it is, warn that it will cause serialization problems.
+                //Debug.LogWarning("Setting up the Value for a '" + this.GetType().Name + "' of '" + typeof(TypeVariable).GetType().Name + "' directly. This change will not be saved on Play/Stop since it can't be serialized. Instead try to inject the reference via the inspector using the 'Object Reference' field.");
                 //}               
 
                 //#endif
