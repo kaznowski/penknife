@@ -11,53 +11,58 @@ public class SerializePropertyAttributeDrawer : PropertyDrawer
 {
     private PropertyInfo propertyFieldInfo = null;
 
-    public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
+    public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
     {
-        UnityEngine.Object target = property.serializedObject.targetObject;
-
-        // Find the property field using reflection, in order to get access to its getter/setter.
-        //if (propertyFieldInfo == null)
-        //    propertyFieldInfo = target.GetType().GetProperty(((SerializeProperty)attribute).PropertyName,
-        //                                         BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-
-        //Get parent of this property
-        object serializedPropertyOwner = SerializedPropertyFindOwner.GetSerializedPropertyOwner(property);
-
-        //Cache the type that will be used.
+        // Cache the type that will be used.
         Type fieldType = fieldInfo.FieldType;
 
-        //Debug.Log(serializedPropertyOwner + " " + fieldType + " " + ((SerializeProperty)attribute).PropertyName);
+        if (fieldType.IsClass && !fieldType.ImplementsOrInherits(typeof(UnityEngine.Object)))
+        {
+            //Debug.Log(EditorGUI.GetPropertyHeight(property, label, true));
+
+            return EditorGUI.GetPropertyHeight(property, label, true);
+        }
+        else
+        {
+            //Debug.Log(base.GetPropertyHeight(property, label));
+
+            return base.GetPropertyHeight(property, label);
+        }
+    }
+
+    public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
+    {
+        // Get object being rendered by this
+        UnityEngine.Object target = property.serializedObject.targetObject;
+
+        // Get parent of this property
+        object serializedPropertyOwner = SerializedPropertyFindOwner.GetSerializedPropertyOwner(property);
+
+        // Cache the type that will be used.
+        Type fieldType = fieldInfo.FieldType;
 
         //Get Property from class that contains that property, and the serialized object
         if (propertyFieldInfo == null)
             propertyFieldInfo = serializedPropertyOwner.GetType().GetProperty(((SerializeProperty)attribute).PropertyName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
 
-        /*
-        //Extract type if its a list or array, and update the fieldtype
-        if (fieldInfo.FieldType.ImplementsOrInherits(typeof(IList)))
-        {
-            Debug.Log(fieldType + " " + serializedPropertyOwner);
-        }
-        else
-        {
-            //Get Property from target that resets the reference value used if needed
-            if (propertyFieldInfo == null)
-                propertyFieldInfo = serializedPropertyOwner.GetType().GetProperty(((SerializeProperty)attribute).PropertyName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-        }
-        */
-
+        //If the property was found
         if (propertyFieldInfo != null)
         {
             // Retrieve the value of the property by calling the "Get" method associated to the property:
             object value = propertyFieldInfo.GetValue(serializedPropertyOwner);
 
+            // If the object is not a structure, call default drawer and stop
+            if (fieldType.IsClass && !fieldType.ImplementsOrInherits(typeof(UnityEngine.Object))) 
+            {
+                EditorGUI.PropertyField(position, property, label, true);
+                return;
+            }
+
             // Draw the property, checking for changes:
             EditorGUI.BeginChangeCheck();
 
             //Draw property and update value
-            value = EditorGUI.PropertyField(position, property, label);
-
-            //DrawProperty(position, property.propertyType, propertyFieldInfo.PropertyType, value, label);
+            value = DrawProperty(position, property.propertyType, propertyFieldInfo.PropertyType, value, label);//EditorGUI.PropertyField(position, property, label);
 
             // If any changes were detected, call the property setter:
             if (EditorGUI.EndChangeCheck() && propertyFieldInfo != null)
@@ -65,7 +70,7 @@ public class SerializePropertyAttributeDrawer : PropertyDrawer
                 // Record object state for undo:
                 Undo.RecordObject(target, "Inspector");
 
-                // Call property setter:
+                //Use setter
                 propertyFieldInfo.SetValue(serializedPropertyOwner, value);
             }
         }
