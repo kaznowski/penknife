@@ -7,9 +7,15 @@ using System.Reflection;
 
 namespace DoubleDash.CodingTools.Editor
 {
-    public static class SerializedPropertyFindParent
+    public static class SerializedPropertyFindOwner
     {
-        public static object GetParent(SerializedProperty prop)
+
+        /// <summary>
+        /// Gets the owner of a serialized property.
+        /// </summary>
+        /// <param name="prop"></param>
+        /// <returns></returns>
+        public static object GetSerializedPropertyOwner(SerializedProperty prop)
         {
             var path = prop.propertyPath.Replace(".Array.data[", "[");
             object obj = prop.serializedObject.targetObject;

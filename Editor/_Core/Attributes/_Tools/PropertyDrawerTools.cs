@@ -2,6 +2,9 @@ using System;
 using UnityEngine;
 using UnityEditor;
 using System.Collections.Generic;
+using System.Reflection;
+using DoubleDash.CodingTools.ClassExtensions;
+using System.Collections;
 
 namespace DoubleDash.CodingTools.Editor
 {
@@ -28,7 +31,8 @@ namespace DoubleDash.CodingTools.Editor
             {typeof(Bounds),             SerializedPropertyType.Bounds},
         };
 
-        public static object GetObjectFromSerializedProperty(SerializedProperty property) {
+        public static object GetObjectFromSerializedProperty(SerializedProperty property)
+        {
             var targetObject = property.serializedObject.targetObject;
             var targetObjectClassType = targetObject.GetType();
             var field = targetObjectClassType.GetField(property.propertyPath);
@@ -52,6 +56,54 @@ namespace DoubleDash.CodingTools.Editor
 
             //Get from dictionary;
             return typeToSerialization[type];
+        }
+
+        /// <summary>
+        /// Given a serialized property and object that owns that property, if the object is an array or list, extract the object from the list or array and update its type.
+        /// </summary>
+        /// <param name="property"></param>
+        /// <param name="serializedPropertyOwner"></param>
+        /// <param name="fieldType"></param>
+        /// <param name="fieldInfo"></param>
+        /// <returns></returns>
+        public static object ExtractValueFromObject(SerializedProperty property, object serializedPropertyOwner, ref Type fieldType, FieldInfo fieldInfo)
+        {
+            //Get type that must be used for getting the internal value
+            if (fieldInfo.FieldType.IsArray)
+            {
+                //Get the argument from the array and find the element.
+                fieldType = fieldInfo.FieldType.GetElementType();
+
+                //Return the element within the index
+                return (fieldInfo.GetValue(serializedPropertyOwner) as IList)[GetIndexFromArray(property.propertyPath)];
+            }
+            else if (fieldInfo.FieldType.ImplementsOrInherits(typeof(IList)))
+            {
+                //Get the argument from the list and find the element.
+                fieldType = fieldInfo.FieldType.GetGenericArguments()[0];
+
+                //Return the element within the index
+                return (fieldInfo.GetValue(serializedPropertyOwner) as IList)[GetIndexFromArray(property.propertyPath)];
+            }
+            else
+            {
+                //Get the object from the serialized parent
+                return fieldInfo.GetValue(serializedPropertyOwner);
+            }
+        }
+
+        /// <summary>
+        /// From an inheritance path, get which index from an array that path points towards.
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        public static int GetIndexFromArray(string path)
+        {
+            var split = path.Split('[');
+            var segment = split[split.Length - 1];
+            path = segment.Substring(0, segment.Length - 1);
+
+            return int.Parse(path);
         }
 
         /// <summary>

@@ -5,12 +5,13 @@ namespace DoubleDash.CodingTools.ReactiveVariables
 {
     //[CreateAssetMenu(fileName = "New Reactive <YourVariableHere>", menuName = "DoubleDash/CodingTools/ReactiveVariables/Variable/<YourVariableHere>")]
     public abstract class ReactiveVariableScriptable<TypeVariable> : ScriptableObject, IVariable<TypeVariable>,
-        IReactiveVariable<TypeVariable>, IEventSubscriber<DelegateEventSubscriber<TypeVariable>>,
-        ISerializationCallbackReceiver
+        IReactiveVariable<TypeVariable>, IEventSubscriber<DelegateEventSubscriber<TypeVariable>>
     {
         [SerializeField]
+        [Tooltip("Since this is a ScriptableObject, whenever the editor exits playmode, the Runtime Value is reset to this Initial Value.")]
         VariableReference<TypeVariable> _initialValue = new VariableReference<TypeVariable>();
 
+        [Tooltip("Since this is a ScriptableObject, whenever the editor enters playmode, this Runtime Value is reset to the Initial Value.")]
         [SerializeField] ReactiveVariable<TypeVariable> _runtimeValue = new ReactiveVariable<TypeVariable>(default(TypeVariable));
 
         #region Properties
@@ -38,16 +39,6 @@ namespace DoubleDash.CodingTools.ReactiveVariables
         }
 
         #endregion
-
-        public void OnBeforeSerialize()
-        {
-            
-        }
-
-        public void OnAfterDeserialize()
-        {
-            
-        }
 
         protected virtual void OnEnable()
         {

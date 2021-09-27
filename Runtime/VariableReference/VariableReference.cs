@@ -98,31 +98,6 @@ namespace DoubleDash.CodingTools
         #region Public Properties
 
         /// <summary>
-        /// Returns true if this Reference is able to get a reference value from the serialized UnityObject. If there's no UnityObject, this also returns false.
-        /// </summary>
-        public bool HasReferenceValue
-        {
-            get
-            {
-                //Try to generate the reference value
-                try
-                {
-                    //Get the reference value from the object or cached interface
-                    GetReferenceValue(out bool success);
-
-                    //Return the result of the search
-                    if (success) return true;
-                    else return false;
-                }
-                catch
-                {
-                    //If it fails by any error, return false
-                    return false;
-                }
-            }
-        }
-
-        /// <summary>
         /// Obtains the reference value of this variable.
         /// </summary>
         public TypeVariable ReferenceValue
@@ -130,15 +105,7 @@ namespace DoubleDash.CodingTools
             get
             {
                 //Get the reference value from the object or cached interface
-                TypeVariable returnValue = GetReferenceValue(out bool success);
-
-                //If the value was found, return it
-                if (success) return returnValue;
-
-                //If the reference wasn't found, throw an error and return the internal value
-                // Commented because it spam the UnityEditor Log and disturb and confuse the debugging Debug.LogError("Trying to get a Reference Value from a '" + this.GetType() + "' of '" +
-                //                typeof(TypeVariable).GetType().Name + "'. But that Object is null.");
-                return internalValue;
+                return GetReferenceValue();
             }
             set
             {
@@ -207,7 +174,7 @@ namespace DoubleDash.CodingTools
 
         #region Private Functions
 
-        TypeVariable GetReferenceValue(out bool success)
+        TypeVariable GetReferenceValue()
         {
             //If the reference isn't null, get it and stop
             if (_referenceValue != null)
@@ -229,8 +196,7 @@ namespace DoubleDash.CodingTools
                 //If it got to this line, then there's no cyclical dependency. If there is a cyclical dependency, the code will loop on the lines above.
                 currentDepth = 0;
 
-                //Tag as success and return
-                success = true;
+                //Return
                 return value;
             }
 
@@ -246,7 +212,6 @@ namespace DoubleDash.CodingTools
                 //If successful, tag as success and return the reference
                 if (_referenceValue != null)
                 {
-                    success = true;
                     return _referenceValue.Value;
                 }
 
@@ -254,8 +219,7 @@ namespace DoubleDash.CodingTools
                 objectReference = null;
             }
 
-            //Tag as failure and return the default value
-            success = false;
+            //Return default value. In case of reference values, the default is null.
             return default;
         }
 
@@ -272,7 +236,7 @@ namespace DoubleDash.CodingTools
 
                 //If the Object implements the variable, create a new class to contain the interface and store the value
                 if (objectType.ImplementsOrInherits(typeof(TypeVariable)))
-                    return new InterfacelessVariable<TypeVariable>((TypeVariable) (object) objectReference);
+                    return new InterfacelessVariable<TypeVariable>((TypeVariable)(object)objectReference);
 
                 //If the Object doesn't implement the IVariable or the Variable, and it is a GameObject...
                 if (objectReference is GameObject)
@@ -293,7 +257,7 @@ namespace DoubleDash.CodingTools
                     {
                         //Attempt to get 'TypeVariable' from a component on that object.
                         TypeVariable gameObjectComponentT =
-                            (TypeVariable) (object) objectAsGameObject.GetComponent<TypeVariable>();
+                            (TypeVariable)(object)objectAsGameObject.GetComponent<TypeVariable>();
 
                         //If has found that component, return it
                         if (gameObjectComponentT != null)
