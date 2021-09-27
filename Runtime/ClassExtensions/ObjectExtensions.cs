@@ -1,6 +1,6 @@
 ﻿using System;
 
-public static class ObjectExtension
+public static class ObjectExtensions
 {
     public static void ThrowIfNull(this object o, string name)
     {

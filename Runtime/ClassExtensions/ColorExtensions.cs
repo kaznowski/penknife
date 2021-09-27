@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public static class ColorExtension
+public static class ColorExtensions
 {
     public static Color Opaque(this Color color)
     {

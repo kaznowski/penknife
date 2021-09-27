@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Object = UnityEngine.Object;
 
-public static class TransformExtension
+public static class TransformExtensions
 {
     #region Position
 

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public static class LayerMaskExtension
+public static class LayerMaskExtensions
 {
     public static int ToSingleLayer(this LayerMask routinePrefabLayer)
     {

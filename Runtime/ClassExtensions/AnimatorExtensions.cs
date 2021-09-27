@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public static class AnimatorExtension
+public static class AnimatorExtensions
 {
     public static bool IsPlaying(this Animator self, string paramName, int layerIndex = 0)
     {

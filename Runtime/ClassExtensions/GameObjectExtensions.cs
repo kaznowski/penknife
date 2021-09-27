@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-public static class GameObjectExtension
+public static class GameObjectExtensions
 {
     public static GameObject Near<T>(this List<GameObject> self, T reference) where T : Component
     {

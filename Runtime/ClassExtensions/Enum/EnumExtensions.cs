@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public static class EnumExtension
+public static class EnumExtensions
 {
     public static void ForeachFlag<T>(T enumTarget,  Action<T> action)
     {

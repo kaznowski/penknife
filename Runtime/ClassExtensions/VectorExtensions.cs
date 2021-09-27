@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public static class VectorExtension
+public static class VectorExtensions
 {
     public const float _zeroAprox = 0.001f;
     #region Vector3

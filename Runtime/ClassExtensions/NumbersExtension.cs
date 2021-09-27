@@ -1,4 +1,4 @@
-﻿public static class NumbersExtension
+﻿public static class NumbersExtensions
 {
     public static int SafeDiv(this int a, int b)
     {

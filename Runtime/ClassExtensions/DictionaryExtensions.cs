@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace DoubleDash.CodingTools.ClassExtensions
 {
-    public static class ExtensionsDictionary
+    public static class DictionaryExtensions
     {
         public static Dictionary<TypeKey,TypeValue> Clone<TypeKey, TypeValue>(this Dictionary<TypeKey, TypeValue> me)
         {

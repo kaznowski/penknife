@@ -5,7 +5,7 @@ using System.Text;
 using UnityEngine;
 using System.Linq;
 
-public static class ListExtension
+public static class ListExtensions
 {
     public static void Shuffle<T>(this IList<T> list)
     {
