@@ -13,11 +13,14 @@ namespace DoubleDash.LogicalPhysics2D
         public int Count;
         public Area2DResultInfo<TargetType>[] ResultInfos;
         public bool Any => Count != 0;
-    
+
         public Area2DResult(int count, Collider2D[] rawArray, TargetType[] results)
         {
+            var resultsCount = 0;
+            if (results != null)
+                resultsCount = results.Length;
             Count = count;
-            ResultInfos = new Area2DResultInfo<TargetType>[results.Length];
+            ResultInfos = new Area2DResultInfo<TargetType>[resultsCount];
             int currentIndex = 0;
             for (int i = 0; i < count; i++)
             {
@@ -27,9 +30,11 @@ namespace DoubleDash.LogicalPhysics2D
                     continue;
                 }
 
-                ResultInfos[currentIndex] = new Area2DResultInfo<TargetType>(result, rawArray[i], Time.realtimeSinceStartupAsDouble);
+                ResultInfos[currentIndex] =
+                    new Area2DResultInfo<TargetType>(result, rawArray[i], Time.realtimeSinceStartupAsDouble);
                 currentIndex++;
             }
+
             Count = currentIndex;
         }
 
@@ -48,7 +53,7 @@ namespace DoubleDash.LogicalPhysics2D
 
             return false;
         }
-    
+
         public void ForEach(Action<TargetType> lambda)
         {
             for (int i = 0; i < Count; i++)
