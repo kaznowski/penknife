@@ -31,14 +31,6 @@ namespace DoubleDash.CodingTools.Editor
             {typeof(Bounds),             SerializedPropertyType.Bounds},
         };
 
-        public static object GetObjectFromSerializedProperty(SerializedProperty property)
-        {
-            var targetObject = property.serializedObject.targetObject;
-            var targetObjectClassType = targetObject.GetType();
-            var field = targetObjectClassType.GetField(property.propertyPath);
-            return field.GetValue(targetObject);
-        }
-
         /// <summary>
         /// Gets a type of serialization from an input Type
         /// </summary>

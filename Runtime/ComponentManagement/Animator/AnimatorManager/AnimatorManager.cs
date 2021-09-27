@@ -4,13 +4,6 @@ using UnityEngine;
 
 namespace DoubleDash.ComponentManagement.AnimatorManagement
 {
-    [System.Serializable]
-    public class AnimatorState
-    {
-        public string stateName;
-        public int layer;
-    }
-
     [RequireComponent(typeof(Animator))]
     public class AnimatorManager : MonoBehaviour
     {
@@ -25,7 +18,7 @@ namespace DoubleDash.ComponentManagement.AnimatorManagement
             }
         }
 
-        #region Animation Playing
+        #region Animation - Play
 
         /// <summary>
         /// Given a state name and a layer, try to play that state.
