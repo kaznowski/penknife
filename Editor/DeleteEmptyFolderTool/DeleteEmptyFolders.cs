@@ -37,7 +37,7 @@ namespace DoubleDash.DeleteEmptyDirTools
 
         public static bool CleanOnSave
         {
-            get => EditorPrefs.GetBool(CLEAN_ON_SAVE_KEY, true);
+            get => EditorPrefs.GetBool(CLEAN_ON_SAVE_KEY, false);
             set => EditorPrefs.SetBool(CLEAN_ON_SAVE_KEY, value);
         }
 

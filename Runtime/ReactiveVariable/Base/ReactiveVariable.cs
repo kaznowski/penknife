@@ -20,7 +20,7 @@ namespace DoubleDash.CodingTools.ReactiveVariables
     [System.Serializable]
     public class ReactiveVariable<TypeVariable> : IVariable<TypeVariable>, IReactiveVariable<TypeVariable>, IEventSubscriber<DelegateEventSubscriber<TypeVariable>>
     {
-        //This cause strange issues on Unity Editor Render [SerializeProperty("Value")]
+        [SerializeProperty("Value")]
         [SerializeField] TypeVariable _variable;
 
         [Header("Events")]
