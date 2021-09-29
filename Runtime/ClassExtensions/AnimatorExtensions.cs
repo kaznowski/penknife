@@ -10,6 +10,15 @@ public static class AnimatorExtensions
         return state.IsName(paramName);
     }
 
+    /*
+    public static bool GetLayerByName(this Animator self, string name) 
+    {
+        for (int i = 0; i < self.layerCount; i ++) { 
+            if()
+        }
+    }
+    */
+
     public static bool ContainsParam(this Animator self, string paramName)
     {
         var p = self.parameters.FirstOrDefault(parameter => parameter.name == paramName);

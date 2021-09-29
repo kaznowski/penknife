@@ -17,7 +17,7 @@ namespace DoubleDash.CodingTools.GenericDatabases {
                                  "On play, these entries will be removed from this list and indexed by their names into a dictionary for instant access.\n\n"+
                                  "If you wish to inject more entries, you can add them into this list via the inspector, and during the next time the dictionary is used, that entry will be added into the dictionary.")]
 
-        VariableReference<TypeClass>[] injectedEntries;
+        TypeClass[] injectedEntries;
 
         //Dictionary that will contain the entries added for O(1) access.
         protected Dictionary<string, TypeClass> _dictionary; 
@@ -67,7 +67,7 @@ namespace DoubleDash.CodingTools.GenericDatabases {
         /// <returns></returns>
         public TypeClass GetEntry(string entryName)
         {
-            if (HasEntry(entryName)) return GetEntry(entryName);
+            if (HasEntry(entryName)) return _dictionary[entryName];
             else                     return null;
         }
 
@@ -122,7 +122,7 @@ namespace DoubleDash.CodingTools.GenericDatabases {
             if (injectedEntries == null) return;
             
             //Iterate through array to get entries, identifying null entries and adding the non-null ones.
-            foreach (VariableReference<TypeClass> injectedEntry in injectedEntries) 
+            foreach (TypeClass injectedEntry in injectedEntries) 
             {
                 //If injected entry is null, stop
                 if (injectedEntry == null) 
@@ -130,13 +130,13 @@ namespace DoubleDash.CodingTools.GenericDatabases {
                     Debug.LogError("Null injected entry on database '" + this.Name + "'.");
                     continue;
                 }
-                else if (injectedEntry.Value == null) //If the injected entry has null value
+                else if (injectedEntry == null) //If the injected entry has null value
                 {
                     Debug.LogError("Injected entry on database '" + this.Name + "' has a null Value.");
                     continue;
                 }
                 //Get value from reference
-                if (injectedEntry != null) _dictionary.Add(injectedEntry.Value.Name, injectedEntry.Value);
+                if (injectedEntry != null) _dictionary.Add(injectedEntry.Name, injectedEntry);
             }
             //Clear the array's data.
             injectedEntries = null;
