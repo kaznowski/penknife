@@ -61,8 +61,13 @@ namespace DoubleDash.CodingTools.Editor
         {
             if (source == null)
                 return null;
+            
+            
             var type = source.GetType();
-            var f = type.GetField(name, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
+            
+            //Get field from the source's type, or any type it derives from
+            var f = GetFieldFromHierarchy(type, name, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
+            
             if (f == null)
             {
                 var p = type.GetProperty(name, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);
@@ -72,6 +77,28 @@ namespace DoubleDash.CodingTools.Editor
             }
             return f.GetValue(source);
         }
+
+        public static FieldInfo GetFieldFromHierarchy(Type type, string name, BindingFlags bindingAttr) 
+        {
+            //Begin searching from the given type
+            var currentType = type;
+
+            //Look up the hierarchy for the field
+            while (currentType.BaseType != typeof(object)) 
+            {
+                //Try to get field
+                var field = currentType.GetField(name, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
+
+                //If was found, return it
+                if (field != null) 
+                    return field;
+
+                //Otherwise, loop 1 layer up on the hierarchy
+                currentType = currentType.BaseType;
+            }
+
+            return null;
+        } 
 
         public static object GetValue(object source, string name, int index)
         {
