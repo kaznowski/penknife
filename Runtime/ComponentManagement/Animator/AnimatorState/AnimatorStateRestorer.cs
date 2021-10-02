@@ -2,18 +2,18 @@ using DoubleDash.CodingTools;
 using DoubleDash.CodingTools.DebugTools;
 using System.Collections;
 using System.Collections.Generic;
+#if UNITY_EDITOR
 using UnityEditor.Animations;
+#endif
 using UnityEngine;
 
-namespace DoubleDash.ComponentManagement.AnimatorManagement {
-
+namespace DoubleDash.ComponentManagement.AnimatorManagement
+{
     [RequireComponent(typeof(Animator))]
     public class AnimatorStateRestorer : MonoBehaviour
     {
         [Header("Debug")]
-
         [HelpBox("For this component to work, it must be placed above the animator in the Inspector Hierarchy.")]
-
         [SerializeField, ReadOnly, Tooltip("Is this component currently storing any animator data?")]
         bool storedData;
 
@@ -67,7 +67,7 @@ namespace DoubleDash.ComponentManagement.AnimatorManagement {
             storedData = true;
         }
 
-        void StoreCurrentAnimationForEachLayer ()
+        void StoreCurrentAnimationForEachLayer()
         {
             //Clear the lists prior to storing
             animatorCurrentAnimation.Clear();
@@ -89,9 +89,9 @@ namespace DoubleDash.ComponentManagement.AnimatorManagement {
         void RestoreAnimator()
         {
             //Do nothing if there is no stored data
-            if (!storedData) 
+            if (!storedData)
                 return;
-            
+
             //Restore parameters and play the current stored animations for each layer
             RestoreAnimatorParameters();
 
@@ -102,11 +102,12 @@ namespace DoubleDash.ComponentManagement.AnimatorManagement {
             storedData = false;
         }
 
-        void PlayStoredAnimationsForEachLayer() 
+        void PlayStoredAnimationsForEachLayer()
         {
-            for (int i = 0; i < animatorCurrentAnimation.Count; i++) 
+            for (int i = 0; i < animatorCurrentAnimation.Count; i++)
             {
-                AnimatorComponent.Play(animatorCurrentAnimation[i].fullPathHash, i, animatorCurrentAnimationNormalizedTime[i]);
+                AnimatorComponent.Play(animatorCurrentAnimation[i].fullPathHash, i,
+                    animatorCurrentAnimationNormalizedTime[i]);
             }
         }
 
@@ -131,4 +132,3 @@ namespace DoubleDash.ComponentManagement.AnimatorManagement {
         #endregion
     }
 }
-
