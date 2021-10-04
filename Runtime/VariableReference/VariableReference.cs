@@ -100,7 +100,7 @@ namespace DoubleDash.CodingTools
         /// <summary>
         /// Obtains the reference value of this variable.
         /// </summary>
-        public TypeVariable ReferenceValue
+        private TypeVariable ReferenceValue
         {
             get
             {
@@ -127,7 +127,7 @@ namespace DoubleDash.CodingTools
         {
             get
             {
-                if (!useReference && internalValue != null && !(internalValue.GetType().IsClass))
+                if (!useReference)
                 {
                     return internalValue;
                 }
@@ -138,7 +138,7 @@ namespace DoubleDash.CodingTools
             }
             set
             {
-                if (!useReference && internalValue != null)
+                if (!useReference)
                 {
                     internalValue = value;
                 }
@@ -146,6 +146,8 @@ namespace DoubleDash.CodingTools
                 {
                     ReferenceValue = value;
                 }
+                if (value is UnityEngine.Object obj)
+                    objectReference = obj;
             }
         }
 
@@ -159,6 +161,8 @@ namespace DoubleDash.CodingTools
         public VariableReference()
         {
             this.internalValue = default;
+            var type = typeof(TypeVariable);
+            useReference = type.IsClass;
         }
 
         /// <summary>
@@ -167,7 +171,14 @@ namespace DoubleDash.CodingTools
         /// <param name="internalValue"></param>
         public VariableReference(TypeVariable internalValue)
         {
+            var type = typeof(TypeVariable);
             this.internalValue = internalValue;
+            useReference = type.IsClass;
+            if (internalValue is UnityEngine.Object obj)
+            {
+                objectReference = obj;
+                useReference = true;
+            }
         }
 
         #endregion
