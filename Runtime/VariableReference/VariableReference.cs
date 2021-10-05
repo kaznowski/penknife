@@ -69,7 +69,7 @@ namespace DoubleDash.CodingTools
         [Tooltip(
             "If this value is true, the value will be taken from an Interface on a UnityEngine.Object, such as a ScriptableObject or MonoBehaviour.\n\n " +
             "This value is also used as the default return for when an error occours.")]
-        public bool useReference;
+        public bool useReference = true;
 
         [Tooltip(
             "Internal value for when not using a reference. Only simple serializable objects that are not classes or interfaces, such as integers, strings, Vectors or Curves can be internal to this instance.")]
@@ -127,7 +127,7 @@ namespace DoubleDash.CodingTools
         {
             get
             {
-                if (!useReference)
+                if (!useReference && objectReference == null)
                 {
                     return internalValue;
                 }
@@ -138,7 +138,7 @@ namespace DoubleDash.CodingTools
             }
             set
             {
-                if (!useReference)
+                if (!useReference && objectReference == null)
                 {
                     internalValue = value;
                 }
@@ -161,8 +161,6 @@ namespace DoubleDash.CodingTools
         public VariableReference()
         {
             this.internalValue = default;
-            var type = typeof(TypeVariable);
-            useReference = type.IsClass;
         }
 
         /// <summary>
