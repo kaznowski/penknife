@@ -2,7 +2,9 @@
     "name": "Unity.ClassExtensions",
     "rootNamespace": "",
     "references": [
-        "GUID:4307f53044263cf4b835bd812fc161a4"
+        "GUID:4307f53044263cf4b835bd812fc161a4",
+        "GUID:ac145e6b8c6034cdbadc8c6e26aedbcf",
+        "GUID:1e8e55397bd004beaba78a667566665f"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
