@@ -2,6 +2,9 @@
   "displayName": "PenKnife",
   "name": "com.doubledashstudios.pen-knife",
   "version": "1.1.4",
+  "dependencies": {
+    "com.unity.mobile.notifications" : "2.0.2"
+  },
   "unity": "2020.3",
   "description": "DoubleDash codebase.",
   "repository": {
