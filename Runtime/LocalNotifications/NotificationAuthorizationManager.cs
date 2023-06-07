@@ -17,13 +17,13 @@ namespace DoubleDash.CodingTools.LocalNotifications
 #if UNITY_ANDROID
             INotificationAuthorization notificationAuthorization;
             notificationAuthorization = new AndroidNotificationAuthorization();
-            notificationAuthorization.RequestAuthorization();
+            StartCoroutine(notificationAuthorization.RequestAuthorization());
 #endif
 
 #if UNITY_IOS
             INotificationAuthorization notificationAuthorization;
             notificationAuthorization = new iOSNotificationAuthorization();
-            notificationAuthorization.RequestAuthorization();
+            StartCoroutine(notificationAuthorization.RequestAuthorization());
 #endif
 
         }
